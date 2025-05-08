@@ -47,7 +47,7 @@ public class Login {
         initialize();
     }
 
-    /**
+    /*
      * INICIALIZA Y CONFIGURA TODOS LOS COMPONENTES DE LA VENTANA
      * ESTABLECE EL DISEÑO Y LAS PROPIEDADES DE LA INTERFAZ
      */

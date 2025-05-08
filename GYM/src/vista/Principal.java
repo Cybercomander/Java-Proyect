@@ -100,7 +100,8 @@ public class Principal {
 		
 		
 	}
-	
+
+	//CERRAR VENTANA
 	public void cerrar_ventana() {
 		System.exit(0);
 	}
