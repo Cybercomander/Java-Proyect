@@ -116,10 +116,6 @@ public class Clase {
         return clientes;
     }
     
-    // GETTERS Y SETTERS ADICIONALES PARA ACCESO ALEATORIO
-    public int getId() { return numClase; }
-    public void setId(int id) { this.numClase = id; }
-
     // SETS
     public void setNumClase(int numClase) {
         this.numClase = numClase;
