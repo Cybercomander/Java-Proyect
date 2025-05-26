@@ -32,7 +32,7 @@ public class ControlClases
 		ArrayList<Clase> clases = datos.getClases();
 		boolean existeClase = clases
 			.stream()
-			.anyMatch(clase -> clase.getNumClase() == c.getNumClase());
+			.anyMatch(clase -> clase.getClaseID() == c.getClaseID());
 		if (existeClase)
 		{
 			JOptionPane.showMessageDialog(null, "Ya existe una clase con ese número");
@@ -70,7 +70,7 @@ public class ControlClases
 	{
 		return datos.getClases()
 			.stream()
-			.filter(clase -> clase.getNumClase() == numClase)
+			.filter(clase -> clase.getClaseID() == numClase)
 			.findFirst()
 			.orElse(null);
 	}
@@ -81,7 +81,7 @@ public class ControlClases
 	public static boolean eliminarClase(int numClase)
 	{
 		ArrayList<Clase> clases = datos.getClases();
-		boolean removed = clases.removeIf(clase -> clase.getNumClase() == numClase);
+		boolean removed = clases.removeIf(clase -> clase.getClaseID() == numClase);
 		if (removed)
 			guardar();
 		return removed;

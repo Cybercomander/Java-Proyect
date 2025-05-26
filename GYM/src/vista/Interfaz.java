@@ -242,7 +242,7 @@ public class Interfaz {
 			return c;
 		}
 
-		String mensaje = "Información de la Clase " + c.getNumClase() + "\n";
+		String mensaje = "Información de la Clase " + c.getClaseID() + "\n";
 		mensaje += "Cantidad de clientes: " + c.getCantidad() + "\n";
 
 		if (c.getEntrenador() != null) {
@@ -275,10 +275,10 @@ public class Interfaz {
 		if (clienteEncontrado != null) {
 			JOptionPane.showMessageDialog(null,
 					"Nombre: " + clienteEncontrado.getNombre() + "\n" + "ID Cliente: " + clienteEncontrado.getIdCliente()
-							+ "\n" + "Fecha de nacimiento: " + clienteEncontrado.getfechaNacimiento() + "\n"
+							+ "\n" + "Fecha de nacimiento: " + clienteEncontrado.getFechaNacimiento() + "\n"
 							+ "Plan de Membresía: " + clienteEncontrado.getPlanMembresia() + "\n" + "IMC: "
 							+ clienteEncontrado.getIMC() + "\n" + "Clase: "
-							+ (clienteEncontrado.getClase() != null ? clienteEncontrado.getClase().getNumClase()
+							+ (clienteEncontrado.getClase() != null ? clienteEncontrado.getClase().getClaseID()
 									: "No asignado"));
 		} else {
 			JOptionPane.showMessageDialog(null, "No se encontró cliente con ese ID");
@@ -294,11 +294,11 @@ public class Interfaz {
             JOptionPane.showMessageDialog(null,
                 "Nombre: " + entrenadorEncontrado.getNombre() + "\n" +
                 "Número de empleado: " + entrenadorEncontrado.getNumEmpleado() + "\n" +
-				"Fecha de nacimiento: " + entrenadorEncontrado.getfechaNacimiento() + "\n" +
+				"Fecha de nacimiento: " + entrenadorEncontrado.getFechaNacimiento() + "\n" +
                 "Salario por hora: " + entrenadorEncontrado.getSalarioHora() + "\n" +
                 "Horas trabajadas: " + entrenadorEncontrado.gethoras() + "\n" +
                 "Clase asignada: " + (entrenadorEncontrado.getClase() != null ? 
-                    entrenadorEncontrado.getClase().getNumClase() : "No asignado"));
+                    entrenadorEncontrado.getClase().getClaseID() : "No asignado"));
         } else {
             JOptionPane.showMessageDialog(null, "No se encontró entrenador con ese número de empleado");
         }
@@ -313,7 +313,7 @@ public class Interfaz {
 
         StringBuilder mensaje = new StringBuilder("Lista de Clases:\n\n");
         for (Clase c : clases) {
-            mensaje.append("Clase ").append(c.getNumClase()).append("\n");
+            mensaje.append("Clase ").append(c.getClaseID()).append("\n");
             mensaje.append("Cantidad de clientes: ").append(c.getCantidad()).append("\n");
             if (c.getEntrenador() != null) {
                 mensaje.append("Entrenador: ").append(c.getEntrenador().getNombre()).append("\n");

@@ -119,7 +119,7 @@ public class Miembros extends JPanel
 				c.getPlanMembresia(),
 				String.format("%.2f", c.getIMC()),
 				c.getFechaNacimiento(),
-				(c.getClase() != null ? c.getClase().getNumClase() : "Sin asignar")
+				(c.getClase() != null ? c.getClase().getClaseID() : "Sin asignar")
 			});
 		}
 	}
@@ -158,7 +158,7 @@ public class Miembros extends JPanel
 			sb.append("\nNombre: ").append(c.getNombre());
 			sb.append("\nPlan: ").append(c.getPlanMembresia());
 			sb.append("\nFecha Nacimiento: ").append(c.getFechaNacimiento());
-			sb.append("\nClase: ").append(c.getClase() != null ? c.getClase().getNumClase() : "Sin asignar");
+			sb.append("\nClase: ").append(c.getClase() != null ? c.getClase().getClaseID() : "Sin asignar");
 			sb.append("\nIMC: ").append(String.format("%.2f", c.getIMC()));
 			
 			if (c.getMedidas() != null && c.getMedidas().size() >= 3)
@@ -230,7 +230,7 @@ public class Miembros extends JPanel
 		
 		for (entidades.Clase c : GestionDatos.getInstancia().getClases())
 		{
-			claseCombo.addItem(c.getNumClase());
+			claseCombo.addItem(c.getClaseID());
 		}
 		
 		panel.add(new JLabel("ID:")); panel.add(idField);
@@ -260,7 +260,7 @@ public class Miembros extends JPanel
 				
 				for (entidades.Clase c : GestionDatos.getInstancia().getClases())
 				{
-					if (c.getNumClase() == numClase)
+					if (c.getClaseID() == numClase)
 					{
 						clase = c;
 						break;
@@ -291,7 +291,7 @@ public class Miembros extends JPanel
 				else
 				{
 					cliente.setNombre(nombre);
-					cliente.setPlanMembresia(plan);
+					cliente.setTipo(plan);
 					cliente.setFechaNacimiento(fecha);
 					cliente.asignaMedidas(peso, altura, grasa);
 					
@@ -406,7 +406,7 @@ public class Miembros extends JPanel
 					if (cli.getIdCliente() == id)
 					{
 						cli.setNombre(nombreField.getText());
-						cli.setPlanMembresia(planField.getText());
+						cli.setTipo(planField.getText());
 						cli.setFechaNacimiento(fechaField.getText());
 						break;
 					}

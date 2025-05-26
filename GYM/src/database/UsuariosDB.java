@@ -3,8 +3,9 @@ package database;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.io.Serializable;
 
-public class UsuariosDB
+public class UsuariosDB implements Serializable
 {
 	private static final String ARCHIVO_USUARIOS = "Usuarios.dat";
 	private static final int SIZE_USUARIO = 20; // caracteres
