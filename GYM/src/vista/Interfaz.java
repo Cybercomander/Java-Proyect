@@ -5,8 +5,9 @@ import entidades.*;
 import java.util.List;
 import javax.swing.JOptionPane;
 
-public class Interfaz {
+@Deprecated	// This class is deprecated and should not be used in new code.
 
+public class Interfaz {
 	public static void main(String[] args) {
 		// INICIALIZAR CONTROL DE CLASES
 		ControlClases.inicializa();
@@ -275,7 +276,7 @@ public class Interfaz {
 			JOptionPane.showMessageDialog(null,
 					"Nombre: " + clienteEncontrado.getNombre() + "\n" + "ID Cliente: " + clienteEncontrado.getIdCliente()
 							+ "\n" + "Fecha de nacimiento: " + clienteEncontrado.getfechaNacimiento() + "\n"
-							+ "Plan de Membresía: " + clienteEncontrado.getPlanMembresía() + "\n" + "IMC: "
+							+ "Plan de Membresía: " + clienteEncontrado.getPlanMembresia() + "\n" + "IMC: "
 							+ clienteEncontrado.getIMC() + "\n" + "Clase: "
 							+ (clienteEncontrado.getClase() != null ? clienteEncontrado.getClase().getNumClase()
 									: "No asignado"));
