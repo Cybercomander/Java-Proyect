@@ -1,6 +1,8 @@
 package entidades;
 
-public class Persona
+import java.io.Serializable;
+
+public class Persona implements Serializable
 {
 	// ATRIBUTOS
 	private String nombre;
@@ -18,7 +20,7 @@ public class Persona
 	// GET
 	public String getNombre() { return nombre; }
 	
-	public String getfechaNacimiento() { return fechaNacimiento; }	
+	public String getFechaNacimiento() { return fechaNacimiento; }
 	
 	//SETTER
 	public void setNombre(String nombre) { this.nombre = nombre; }

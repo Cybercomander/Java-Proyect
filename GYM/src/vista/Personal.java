@@ -88,7 +88,7 @@ public class Personal extends JPanel
 		for (Entrenador e : entrenadores)
 		{
 			System.out.println("ID: " + e.getNumEmpleado() + ", Nombre: " + e.getNombre());
-			String clase = (e.getClase() != null) ? String.valueOf(e.getClase().getNumClase()) : "Sin asignar";
+			String clase = (e.getClase() != null) ? String.valueOf(e.getClase().getClaseID()) : "Sin asignar";
 			tableModel.addRow(new Object[]{e.getNumEmpleado(), e.getNombre(), "Entrenador", clase});
 		}
 		// Aquí podrías agregar más tipos de personal si existieran
@@ -115,7 +115,7 @@ public class Personal extends JPanel
 				"\nSalario Diario: $" + String.format("%.2f", e.getsalarioDiario()) +
 				"\nSalario por hora: $" + String.format("%.2f", e.getSalarioHora()) +
 				"\nHoras: " + e.gethoras() +
-				"\nClase: " + (e.getClase() != null ? e.getClase().getNumClase() : "Sin asignar");
+				"\nClase: " + (e.getClase() != null ? e.getClase().getClaseID() : "Sin asignar");
 			detallesArea.setText(sb);
 		}
 	}
@@ -275,7 +275,7 @@ private JPanel crearPanelFormulario(Entrenador entrenador)
 	
 	for (Clase c : GestionDatos.getInstancia().getClases())
 	{
-		claseCombo.addItem(c.getNumClase());
+		claseCombo.addItem(c.getClaseID());
 	}
 	
 	JButton btnNuevaClase = new JButton("Nueva Clase");
@@ -293,7 +293,7 @@ private JPanel crearPanelFormulario(Entrenador entrenador)
 				
 				for (Clase c : GestionDatos.getInstancia().getClases())
 				{
-					if (c.getNumClase() == nuevoNum)
+					if (c.getClaseID() == nuevoNum)
 					{
 						existe = true;
 						break;
@@ -346,7 +346,7 @@ private JPanel crearPanelFormulario(Entrenador entrenador)
 			
 			for (Clase c : GestionDatos.getInstancia().getClases())
 			{
-				if (c.getNumClase() == numClase)
+				if (c.getClaseID() == numClase)
 				{
 					clase = c;
 					break;

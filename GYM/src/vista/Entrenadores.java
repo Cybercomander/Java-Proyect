@@ -100,7 +100,7 @@ public class Entrenadores extends JPanel
 		detallesArea.setWrapStyleWord(true);
 		JScrollPane detallesScroll = new JScrollPane(detallesArea);
 		JLabel lblDetalles = new JLabel("Detalles del Entrenador", SwingConstants.CENTER);
-		lblDetalles.setFont(new Font("Verdana", Font.PLAIN, 11));
+		lblDetalles.setFont(new Font("Verdana", Font.PLAIN, 14)); // Changed font size for JLabel
 		rightPanel.add(lblDetalles, BorderLayout.NORTH);
 		rightPanel.add(detallesScroll, BorderLayout.CENTER);
 		add(rightPanel, BorderLayout.EAST);
@@ -123,15 +123,15 @@ public class Entrenadores extends JPanel
 		for (Entrenador e : entrenadores)
 		{
 			System.out.println("ID: " + e.getNumEmpleado() + ", Nombre: " + e.getNombre());
-			String clase = (e.getClase() != null) ? String.valueOf(e.getClase().getNumClase()) : "Sin asignar";
+			String clase = (e.getClase() != null) ? String.valueOf(e.getClase().getClaseID()) : "Sin asignar";
 			tableModel.addRow(new Object[]
-				{
-					e.getNumEmpleado(),
-					e.getNombre(),
-					String.format("%.2f", e.getsalarioDiario()),
-					e.gethoras(),
-					clase
-				}
+					{
+							e.getNumEmpleado(),
+							e.getNombre(),
+							String.format("%.2f", e.getsalarioDiario()),
+							e.gethoras(),
+							clase
+					}
 			);
 		}
 		System.out.println("Total entrenadores cargados: " + entrenadores.size());
@@ -149,13 +149,13 @@ public class Entrenadores extends JPanel
 		{
 			if (e.getNombre().toLowerCase().contains(texto))
 			{
-				String clase = (e.getClase() != null) ? String.valueOf(e.getClase().getNumClase()) : "";
+				String clase = (e.getClase() != null) ? String.valueOf(e.getClase().getClaseID()) : "";
 				tableModel.addRow(new Object[]
-				{
-					e.getNumEmpleado(),
-					e.getNombre(),
-					String.format("%.2f", e.getsalarioDiario()), e.gethoras(), clase
-				});
+						{
+								e.getNumEmpleado(),
+								e.getNombre(),
+								String.format("%.2f", e.getsalarioDiario()), e.gethoras(), clase
+						});
 			}
 		}
 	}
@@ -181,7 +181,7 @@ public class Entrenadores extends JPanel
 					"\nSalario Diario: $" + String.format("%.2f", e.getsalarioDiario()) +
 					"\nSalario por hora: $" + String.format("%.2f", e.getSalarioHora()) +
 					"\nHoras: " + e.gethoras() +
-					"\nClase: " + (e.getClase() != null ? e.getClase().getNumClase() : "Sin asignar");
+					"\nClase: " + (e.getClase() != null ? e.getClase().getClaseID() : "Sin asignar");
 			detallesArea.setText(sb);
 		}
 	}
@@ -193,12 +193,12 @@ public class Entrenadores extends JPanel
 	{
 		if (editando)
 			return;
-		
+
 		editando = true;
-		
+
 		if (panelFormulario != null)
 			panelCentral.remove(panelFormulario);
-		
+
 		panelFormulario = crearPanelFormulario(null);
 		panelCentral.add(panelFormulario, BorderLayout.NORTH);
 		panelCentral.revalidate();
@@ -211,25 +211,25 @@ public class Entrenadores extends JPanel
 	private void mostrarFormularioEditar()
 	{
 		int row = table.getSelectedRow();
-		
+
 		if (row == -1 || editando)
 		{
 			if (!editando)
 				JOptionPane.showMessageDialog(this, "Selecciona un entrenador para editar.");
 			return;
 		}
-		
+
 		int id = (int) tableModel.getValueAt(row, 0);
 		Entrenador e = buscarEntrenadorPorId(id);
-		
+
 		if (e == null)
 			return;
-		
+
 		editando = true;
-		
+
 		if (panelFormulario != null)
 			panelCentral.remove(panelFormulario);
-		
+
 		panelFormulario = crearPanelFormulario(e);
 		panelCentral.add(panelFormulario, BorderLayout.NORTH);
 		panelCentral.revalidate();
@@ -244,20 +244,31 @@ public class Entrenadores extends JPanel
 	{
 		JPanel panel = new JPanel(new GridLayout(0,2,5,5));
 		panel.setBorder(BorderFactory.createTitledBorder(entrenador == null ? "Agregar Entrenador" : "Editar Entrenador"));
+
+		// Set font for TitledBorder
+		((javax.swing.border.TitledBorder)panel.getBorder()).setTitleFont(new Font("Verdana", Font.PLAIN, 14));
+
 		JTextField idField = new JTextField(entrenador == null ? "" : String.valueOf(entrenador.getNumEmpleado()));
+		idField.setFont(new Font("Verdana", Font.PLAIN, 12)); // Added font
 		idField.setEnabled(entrenador == null);
 		JTextField nombreField = new JTextField(entrenador == null ? "" : entrenador.getNombre());
+		nombreField.setFont(new Font("Verdana", Font.PLAIN, 12)); // Added font
 		JTextField fechaField = new JTextField(entrenador == null ? "" : entrenador.getFechaNacimiento());
+		fechaField.setFont(new Font("Verdana", Font.PLAIN, 12)); // Added font
 		JTextField salarioHoraField = new JTextField(entrenador == null ? "" : String.valueOf(entrenador.getSalarioHora()));
+		salarioHoraField.setFont(new Font("Verdana", Font.PLAIN, 12)); // Added font
 		JTextField horasField = new JTextField(entrenador == null ? "" : String.valueOf(entrenador.gethoras()));
+		horasField.setFont(new Font("Verdana", Font.PLAIN, 12)); // Added font
 		JComboBox<Integer> claseCombo = new JComboBox<>();
-		
+		claseCombo.setFont(new Font("Verdana", Font.PLAIN, 12)); // Added font
+
 		for (entidades.Clase c : GestionDatos.getInstancia().getClases())
 		{
-			claseCombo.addItem(c.getNumClase());
+			claseCombo.addItem(c.getClaseID());
 		}
-		
+
 		JButton btnNuevaClase = new JButton("Nueva Clase");
+		btnNuevaClase.setFont(new Font("Verdana", Font.PLAIN, 11)); // Added font
 		btnNuevaClase.addActionListener(e ->
 		{
 			String input = JOptionPane.showInputDialog(this, "Número de nueva clase:");
@@ -267,16 +278,16 @@ public class Entrenadores extends JPanel
 				{
 					int nuevoNum = Integer.parseInt(input.trim());
 					boolean existe = false;
-					
+
 					for (entidades.Clase c : GestionDatos.getInstancia().getClases())
 					{
-						if (c.getNumClase() == nuevoNum)
+						if (c.getClaseID() == nuevoNum)
 						{
 							existe = true;
 							break;
 						}
 					}
-					
+
 					if (existe)
 					{
 						JOptionPane.showMessageDialog(this, "Ya existe una clase con ese número.");
@@ -296,18 +307,44 @@ public class Entrenadores extends JPanel
 				}
 			}
 		});
-		panel.add(new JLabel("ID:")); panel.add(idField);
-		panel.add(new JLabel("Nombre:")); panel.add(nombreField);
-		panel.add(new JLabel("Fecha Nacimiento:")); panel.add(fechaField);
-		panel.add(new JLabel("Salario por hora:")); panel.add(salarioHoraField);
-		panel.add(new JLabel("Horas:")); panel.add(horasField);
-		panel.add(new JLabel("Clase:"));
+
+		JLabel lblId = new JLabel("ID:");
+		lblId.setFont(new Font("Verdana", Font.PLAIN, 12)); // Added font
+		panel.add(lblId);
+		panel.add(idField);
+
+		JLabel lblNombre = new JLabel("Nombre:");
+		lblNombre.setFont(new Font("Verdana", Font.PLAIN, 12)); // Added font
+		panel.add(lblNombre);
+		panel.add(nombreField);
+
+		JLabel lblFechaNacimiento = new JLabel("Fecha Nacimiento:");
+		lblFechaNacimiento.setFont(new Font("Verdana", Font.PLAIN, 12)); // Added font
+		panel.add(lblFechaNacimiento);
+		panel.add(fechaField);
+
+		JLabel lblSalarioHora = new JLabel("Salario por hora:");
+		lblSalarioHora.setFont(new Font("Verdana", Font.PLAIN, 12)); // Added font
+		panel.add(lblSalarioHora);
+		panel.add(salarioHoraField);
+
+		JLabel lblHoras = new JLabel("Horas:");
+		lblHoras.setFont(new Font("Verdana", Font.PLAIN, 12)); // Added font
+		panel.add(lblHoras);
+		panel.add(horasField);
+
+		JLabel lblClase = new JLabel("Clase:");
+		lblClase.setFont(new Font("Verdana", Font.PLAIN, 12)); // Added font
+		panel.add(lblClase);
+
 		JPanel clasePanel = new JPanel(new BorderLayout());
 		clasePanel.add(claseCombo, BorderLayout.CENTER);
 		clasePanel.add(btnNuevaClase, BorderLayout.EAST);
 		panel.add(clasePanel);
 		JButton btnGuardar = new JButton("Guardar");
+		btnGuardar.setFont(new Font("Verdana", Font.PLAIN, 12)); // Added font
 		JButton btnCancelar = new JButton("Cancelar");
+		btnCancelar.setFont(new Font("Verdana", Font.PLAIN, 12)); // Added font
 		panel.add(btnGuardar); panel.add(btnCancelar);
 		btnGuardar.addActionListener(e ->
 		{
@@ -320,16 +357,16 @@ public class Entrenadores extends JPanel
 				int horas = Integer.parseInt(horasField.getText());
 				int numClase = (Integer) claseCombo.getSelectedItem();
 				entidades.Clase clase = null;
-				
+
 				for (entidades.Clase c : GestionDatos.getInstancia().getClases())
 				{
-					if (c.getNumClase() == numClase)
+					if (c.getClaseID() == numClase)
 					{
 						clase = c;
 						break;
 					}
 				}
-				
+
 				if (entrenador == null)
 				{
 					if (buscarEntrenadorPorId(id) != null)
@@ -337,13 +374,13 @@ public class Entrenadores extends JPanel
 						JOptionPane.showMessageDialog(this, "Ya existe un entrenador con ese ID.");
 						return;
 					}
-					
+
 					Entrenador nuevo = new Entrenador(nombre, fecha, id, salarioHora, horas);
 					nuevo.setClase(clase);
-					
+
 					if (clase != null)
 						clase.setEntrenador(nuevo);
-					
+
 					GestionDatos.getInstancia().guardarDatos();
 					JOptionPane.showMessageDialog(this, "Entrenador agregado exitosamente.");
 				}
@@ -355,7 +392,7 @@ public class Entrenadores extends JPanel
 					entrenador.setHoras(horas);
 					if (clase != null)
 						entrenador.setClase(clase);
-					
+
 					GestionDatos.getInstancia().guardarDatos();
 					JOptionPane.showMessageDialog(this, "Entrenador editado exitosamente.");
 				}
@@ -391,13 +428,13 @@ public class Entrenadores extends JPanel
 	private void eliminarEntrenador()
 	{
 		int row = table.getSelectedRow();
-		
+
 		if (row == -1)
 		{
 			JOptionPane.showMessageDialog(this, "Selecciona un entrenador para eliminar.");
 			return;
 		}
-		
+
 		int id = (int) tableModel.getValueAt(row, 0);
 		int confirm = JOptionPane.showConfirmDialog(this, "¿Seguro que deseas eliminar este entrenador?", "Confirmar", JOptionPane.YES_NO_OPTION);
 		if (confirm == JOptionPane.YES_OPTION)
@@ -426,13 +463,13 @@ public class Entrenadores extends JPanel
 	private Entrenador buscarEntrenadorPorId(int id)
 	{
 		ArrayList<Entrenador> entrenadores = GestionDatos.getInstancia().getEntrenadores();
-		
+
 		for (Entrenador e : entrenadores)
 		{
 			if (e.getNumEmpleado() == id)
 				return e;
 		}
-		
+
 		return null;
 	}
 

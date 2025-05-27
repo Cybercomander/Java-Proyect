@@ -1,8 +1,10 @@
 package entidades;
 
+import java.io.Serializable;
+
 // CLASE "ENTRENADOR" QUE REPRESENTA A UN ENTRENADOR DEL GIMNASIO.
 // HEREDA DE LA CLASE "Persona" Y CONTIENE INFORMACIÓN ADICIONAL COMO NÚMERO DE EMPLEADO, SALARIO Y HORAS TRABAJADAS.
-public class Entrenador extends Persona
+public class Entrenador extends Persona implements Serializable
 {
 	//ATRIBUTOS
 	private int numEmpleado;
@@ -80,8 +82,6 @@ public class Entrenador extends Persona
 	public void setId(int id) { this.numEmpleado = id; }
 	
 	public String getTipo() { return "Entrenador"; }
-
-	public String getFechaNacimiento() { return getfechaNacimiento(); }
 	
 	public void setFechaNacimiento(String fecha) { super.setFechaNacimiento(fecha); }
 	
