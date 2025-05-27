@@ -1,90 +1,82 @@
 package entidades;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 // CLASE "CLIENTE" QUE REPRESENTA A UN MIEMBRO DEL GIMNASIO.
 // HEREDA DE LA CLASE "Persona" Y CONTIENE INFORMACIÓN ADICIONAL COMO PLAN DE MEMBRESÍA, IMC Y MEDIDAS.
 
-public class Cliente extends Persona {
-	// ATRIBUTOS
+public class Cliente extends Persona implements Serializable {
+	private static final long serialVersionUID = 1L;
+
 	private int idCliente;
-	private String planMembresía;
+	private String planMembresia;
 	private float imc;
+	private ArrayList<Float> medidas;  // [peso, altura, edad]
+	private Clase suClase;             // Clase asignada
 
-	// CAMBIAMOS LA DECLARACION DE MEDIDAS DE ARRELO A LISTA
-	private ArrayList<Float> medidas;
-
-	private Clase suClase; // ATRIBUTO DE RELACION CON LA CLASE
-
-	// CONSTRUCTOR POR DEFAULT
-	// INICIALIZA UN CLIENTE CON VALORES POR DEFECTO Y UNA LISTA VACÍA DE MEDIDAS.
 	public Cliente() {
 		super();
-		medidas = new ArrayList<>(); // CREACION DEL OBJETO ARRAYLIST
+		this.medidas = new ArrayList<>();
 	}
 
-	// CONSTRUCTOR ADICIONAL
-	// INICIALIZA UN CLIENTE CON LOS DATOS PROPORCIONADOS COMO NOMBRE, ID, PLAN DE MEMBRESÍA Y FECHA DE NACIMIENTO.
-	public Cliente(String nombre, int idCliente, String planMembresía, String fechaNacimiento) {
+	public Cliente(String nombre, int idCliente, String planMembresia, String fechaNacimiento) {
 		super(nombre, fechaNacimiento);
-		this.planMembresía = planMembresía;
 		this.idCliente = idCliente;
-		medidas = new ArrayList<>(); // CREACION DEL OBJETO ARRAYLIST
+		this.planMembresia = planMembresia;
+		this.medidas = new ArrayList<>();
 	}
 
-	// METODOS
-	// MÉTODO "asignaMedidas":
-	// AGREGA PESO, ALTURA Y GRASA CORPORAL A LA LISTA DE MEDIDAS DEL CLIENTE Y CALCULA SU IMC.
-	public void asignaMedidas(float peso, float altura, float grasa) {
+	/** Agrega peso, altura y edad, y recalcula IMC */
+	public void asignaMedidas(float peso, float altura, float edad) {
+		medidas.clear();
 		medidas.add(peso);
 		medidas.add(altura);
-		medidas.add(grasa);
-
+		medidas.add(edad);
 		calculaIMC();
 	}
 
-	// MÉTODO "calculaIMC":
-	// CALCULA EL ÍNDICE DE MASA CORPORAL (IMC) DEL CLIENTE BASADO EN SU PESO Y ALTURA.
+	/** Calcula IMC = peso / (altura^2) */
 	public void calculaIMC() {
-		if (medidas.isEmpty() || medidas.size() < 2) {
+		if (medidas.size() < 2) {
 			imc = 0;
-			return;
+		} else {
+			float peso = medidas.get(0);
+			float altura = medidas.get(1);
+			if (altura > 0) {
+				imc = peso / (altura * altura);
+			} else {
+				imc = 0;
+			}
 		}
-
-		// CALCULAR IMC (PESO / ALTURA^2)
-		float peso = medidas.get(0);
-		float altura = medidas.get(1);
-		imc = peso / (altura * altura);
 	}
 
-	// GETTERS
-	// MÉTODOS GETTERS:
-	// PERMITEN OBTENER EL ID DEL CLIENTE, SU PLAN DE MEMBRESÍA, IMC, CLASE ASIGNADA Y MEDIDAS.
-	public int getIdCliente() {
-		return idCliente;
-	}
-
-	public String getPlanMembresía() {
-		return planMembresía;
-	}
-
+	/** Devuelve el IMC */
 	public float getIMC() {
 		return imc;
 	}
 
-	public Clase getClase() {
-		return suClase;
+	// --- Getters y setters principales ---
+
+	public int getId() {
+		return idCliente;
 	}
 
-	public ArrayList<Float> getMedidas() {
-		return medidas;
+	public void setId(int id) {
+		this.idCliente = id;
 	}
 
-	// SETTERS
-	// MÉTODOS SETTERS:
-	// PERMITEN MODIFICAR EL ID DEL CLIENTE, SU PLAN DE MEMBRESÍA Y LA CLASE ASIGNADA.
-	public void setIdCliente(int idCliente) {
-		this.idCliente = idCliente;
+	public String getTipo() {
+		return planMembresia;
+	}
+
+	public void setTipo(String tipo) {
+		this.planMembresia = tipo;
+	}
+
+	@Override
+	public String getFechaNacimiento() {
+		return super.getFechaNacimiento();
 	}
 
 	@Override
@@ -92,26 +84,71 @@ public class Cliente extends Persona {
 		super.setFechaNacimiento(fechaNacimiento);
 	}
 
-	public void setPlanMembresía(String planMembresía) {
-		this.planMembresía = planMembresía;
+	public Clase getClase() {
+		return suClase;
 	}
 
 	public void setClase(Clase suClase) {
 		this.suClase = suClase;
 	}
 
-	// GETTERS Y SETTERS ADICIONALES PARA ACCESO ALEATORIO
-	public int getId() { return idCliente; }
-	public void setId(int id) { this.idCliente = id; }
-	public String getTipo() { return planMembresía; }
-	public void setTipo(String tipo) { this.planMembresía = tipo; }
-	public String getFechaNacimiento() { return getfechaNacimiento(); }
-	public int getPeso() { return (medidas.size() > 0) ? Math.round(medidas.get(0)) : 0; }
-	public void setPeso(int peso) { if (medidas.size() > 0) medidas.set(0, (float)peso); else medidas.add((float)peso); calculaIMC(); }
-	public float getAltura() { return (medidas.size() > 1) ? medidas.get(1) : 0; }
-	public void setAltura(float altura) { if (medidas.size() > 1) medidas.set(1, altura); else if (medidas.size() == 1) medidas.add(altura); else { medidas.add(0f); medidas.add(altura); } calculaIMC(); }
-	public int getEdad() { return (medidas.size() > 2) ? Math.round(medidas.get(2)) : 0; }
-	public void setEdad(int edad) { if (medidas.size() > 2) medidas.set(2, (float)edad); else { while (medidas.size() < 2) medidas.add(0f); medidas.add((float)edad); } }
-	public int getExperiencia() { return 0; } // No aplica a Cliente
-	public void setExperiencia(int exp) { /* No aplica a Cliente */ }
+	// --- Medidas individuales ---
+
+	public float getPeso() {
+		return medidas.size() > 0 ? medidas.get(0) : 0f;
+	}
+
+	public void setPeso(float peso) {
+		if (medidas.size() > 0) {
+			medidas.set(0, peso);
+		} else {
+			// rellenar hasta el índice 0
+			while (medidas.size() < 1) medidas.add(0f);
+			medidas.set(0, peso);
+		}
+		calculaIMC();
+	}
+
+	public float getAltura() {
+		return medidas.size() > 1 ? medidas.get(1) : 0f;
+	}
+
+	public void setAltura(float altura) {
+		if (medidas.size() > 1) {
+			medidas.set(1, altura);
+		} else {
+			while (medidas.size() < 1) medidas.add(0f);
+			medidas.add(altura);
+		}
+		calculaIMC();
+	}
+
+	public int getEdad() {
+		return medidas.size() > 2 ? Math.round(medidas.get(2)) : 0;
+	}
+
+	public void setEdad(int edad) {
+		if (medidas.size() > 2) {
+			medidas.set(2, (float) edad);
+		} else {
+			while (medidas.size() < 2) medidas.add(0f);
+			medidas.add((float) edad);
+		}
+	}
+
+	/** Devuelve todas las medidas en orden [peso, altura, edad] */
+	public ArrayList<Float> getMedidas() {
+		return medidas;
+	}
+
+	/**
+	 * (Opcional) Para compatibilidad con usuarios existentes
+	 */
+	public int getIdCliente() {
+		return idCliente;
+	}
+
+	public String getPlanMembresia() {
+		return planMembresia;
+	}
 }

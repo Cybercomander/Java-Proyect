@@ -4,25 +4,23 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.CardLayout;
-import javax.swing.ImageIcon;
+import java.awt.Color;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.JLabel;
-import java.awt.Color;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import base_datos.GestionDatos;
+import javax.swing.JOptionPane;
+
+import database.GestionDatos;
+
+import static control.ControlClases.guardar;
+import javax.swing.border.TitledBorder;
 
 public class Principal {
-
 	private JFrame frmSistemaDeGestion;
 	private JPanel centralPanel;
-	private CardLayout cardLayout;
+	private CardLayout cl_centralPanel;
 	private Miembros panelMiembros;
 	private Entrenadores panelEntrenadores;
 	private Personal panelPersonal;
@@ -35,142 +33,148 @@ public class Principal {
 		initialize();
 		iniciarReloj();
 		frmSistemaDeGestion.setVisible(true);
+		frmSistemaDeGestion.setLocationRelativeTo(null);
+		frmSistemaDeGestion.setResizable(false);
 	}
 
 	private void initialize() {
 		frmSistemaDeGestion = new JFrame();
-		frmSistemaDeGestion.setTitle("SISTEMA DE GESTION ADMINISTRATIVA DE GIMNASIO");
+		frmSistemaDeGestion.setFont(new Font("Verdana", Font.PLAIN, 12));
+		frmSistemaDeGestion.setTitle("Sistema de Gestión Administrativa de Gimnasio");
 		frmSistemaDeGestion.setBounds(100, 100, 1080, 581);
 		frmSistemaDeGestion.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		JPanel topPanel = new JPanel();
-		FlowLayout flowLayout_1 = (FlowLayout) topPanel.getLayout();
-		flowLayout_1.setAlignment(FlowLayout.TRAILING);
-		frmSistemaDeGestion.getContentPane().add(topPanel, BorderLayout.SOUTH);
+		// ---- SOUTH PANEL ----
+		JPanel southPanel = new JPanel();
+		frmSistemaDeGestion.getContentPane().add(southPanel, BorderLayout.SOUTH);
 
-		JButton btnAceptar = new JButton("Aceptar");
-		btnAceptar.setHorizontalAlignment(SwingConstants.RIGHT);
-		btnAceptar.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		topPanel.add(btnAceptar);
+		JButton btnPrincipal = new JButton("Principal");
+		btnPrincipal.setFont(new Font("Verdana", Font.PLAIN, 12));
+		btnPrincipal.setHorizontalAlignment(SwingConstants.LEADING);
+		btnPrincipal.addActionListener(e -> mostrarPanel("Dashboard"));
+		southPanel.add(btnPrincipal);
 
-		JButton btnCancelar = new JButton("Cancelar");
-		btnCancelar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				cerrar_ventana();
-			}
-		});
-		btnCancelar.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		btnCancelar.setHorizontalAlignment(SwingConstants.RIGHT);
-		topPanel.add(btnCancelar);
+		JButton btnEntrenadores = new JButton("Entrenadores");
+		btnEntrenadores.setFont(new Font("Verdana", Font.PLAIN, 12));
+		btnEntrenadores.addActionListener(e -> mostrarPanel("Entrenadores"));
+		southPanel.add(btnEntrenadores);
 
-		// Panel central con CardLayout para cambiar entre vistas
-		cardLayout = new CardLayout();
-		centralPanel = new JPanel(cardLayout);
+		JButton btnMiembros = new JButton("Miembros");
+		btnMiembros.setFont(new Font("Verdana", Font.PLAIN, 12));
+		btnMiembros.addActionListener(e -> mostrarPanel("Miembros"));
+		southPanel.add(btnMiembros);
+
+		JButton btnPersonal = new JButton("Personal");
+		btnPersonal.setFont(new Font("Verdana", Font.PLAIN, 12));
+		btnPersonal.addActionListener(e -> mostrarPanel("Personal"));
+		southPanel.add(btnPersonal);
+
+		JButton btnUsuarios = new JButton("Usuarios");
+		btnUsuarios.setFont(new Font("Verdana", Font.PLAIN, 12));
+		btnUsuarios.addActionListener(e -> mostrarPanel("Usuarios"));
+		southPanel.add(btnUsuarios);
+
+		JLabel lblEspacio = new JLabel("                                        ");
+		lblEspacio.setFont(new Font("Verdana", Font.PLAIN, 12));
+		southPanel.add(lblEspacio);
+
+		JButton btnGuardarCambios = new JButton("Guardar cambios");
+		btnGuardarCambios.setFont(new Font("Verdana", Font.PLAIN, 12));
+		btnGuardarCambios.setHorizontalAlignment(SwingConstants.RIGHT);
+		btnGuardarCambios.addActionListener(e -> guardar());
+		southPanel.add(btnGuardarCambios);
+
+		JButton btnSalir = new JButton("Salir del programa");
+		btnSalir.setFont(new Font("Verdana", Font.PLAIN, 12));
+		btnSalir.setHorizontalAlignment(SwingConstants.RIGHT);
+		btnSalir.addActionListener(e -> cerrarVentana());
+		southPanel.add(btnSalir);
+
+		// ---- CENTRAL PANEL ----
+		cl_centralPanel = new CardLayout();
+		centralPanel = new JPanel(cl_centralPanel);
 		centralPanel.setBackground(Color.WHITE);
 		frmSistemaDeGestion.getContentPane().add(centralPanel, BorderLayout.CENTER);
 
-		// Paneles de cada sección
-		panelDashboard = crearPanelDashboard();
-		panelMiembros = new Miembros();
-		panelEntrenadores = new Entrenadores();
-		panelPersonal = new Personal();
-		panelUsuarios = new Usuarios();
+		panelDashboard   = crearPanelDashboard();
+		panelMiembros    = new Miembros();
+		panelEntrenadores= new Entrenadores();
+		panelPersonal    = new Personal();
+		panelUsuarios    = new Usuarios();
 
-		centralPanel.add(panelDashboard, "Dashboard");
-		centralPanel.add(panelMiembros, "Miembros");
+		centralPanel.add(panelDashboard,    "Dashboard");
+		centralPanel.add(panelMiembros,     "Miembros");
 		centralPanel.add(panelEntrenadores, "Entrenadores");
-		centralPanel.add(panelPersonal, "Personal");
-		centralPanel.add(panelUsuarios, "Usuarios");
+		centralPanel.add(panelPersonal,     "Personal");
+		centralPanel.add(panelUsuarios,     "Usuarios");
 
-		JPanel southPanel = new JPanel();
-		FlowLayout flowLayout = (FlowLayout) southPanel.getLayout();
-		flowLayout.setAlignment(FlowLayout.LEADING);
-		frmSistemaDeGestion.getContentPane().add(southPanel, BorderLayout.NORTH);
+		// ---- TOP PANEL ----
+		JPanel topPanel = new JPanel();
+		FlowLayout fl_topPanel = (FlowLayout) topPanel.getLayout();
+		fl_topPanel.setAlignment(FlowLayout.LEADING);
+		frmSistemaDeGestion.getContentPane().add(topPanel, BorderLayout.NORTH);
 
 		relojLabel = new JLabel();
-		relojLabel.setFont(new Font("Tahoma", Font.BOLD, 16));
+		relojLabel.setFont(new Font("Verdana", Font.BOLD, 16));
+		relojLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		relojLabel.setForeground(new Color(33, 102, 172));
-		southPanel.add(relojLabel);
-
-		JMenuBar menuBar = new JMenuBar();
-		frmSistemaDeGestion.setJMenuBar(menuBar);
-
-		JMenu mnNewMenu = new JMenu("Menú");
-		menuBar.add(mnNewMenu);
-
-		JMenuItem menuPrincipal = new JMenuItem("Principal");
-		mnNewMenu.add(menuPrincipal);
-		menuPrincipal.addActionListener(e -> mostrarPanel("Dashboard"));
-
-		JMenuItem menuEntrenadores = new JMenuItem("Entrenadores");
-		mnNewMenu.add(menuEntrenadores);
-		menuEntrenadores.addActionListener(e -> mostrarPanel("Entrenadores"));
-
-		JMenuItem menuMiembros = new JMenuItem("Miembros");
-		mnNewMenu.add(menuMiembros);
-		menuMiembros.addActionListener(e -> mostrarPanel("Miembros"));
-
-		JMenuItem menuPersonal = new JMenuItem("Personal");
-		mnNewMenu.add(menuPersonal);
-		menuPersonal.addActionListener(e -> mostrarPanel("Personal"));
-
-		JMenuItem menuUsuarios = new JMenuItem("Usuarios");
-		mnNewMenu.add(menuUsuarios);
-		menuUsuarios.addActionListener(e -> mostrarPanel("Usuarios"));
-
-		JMenuItem menuSalir = new JMenuItem("Salir");
-		menuSalir.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				cerrar_ventana();
-			}
-		});
-		menuSalir.setIcon(new ImageIcon(Principal.class.getResource("/icons/cross.png")));
-		mnNewMenu.add(menuSalir);
+		topPanel.add(relojLabel);
 
 		frmSistemaDeGestion.setVisible(true);
 		mostrarPanel("Dashboard");
 	}
 
 	private JPanel crearPanelDashboard() {
-		JPanel panel = new JPanel();
-		panel.setBackground(new Color(245, 245, 245));
-		panel.setLayout(new BorderLayout());
+		ImagePanel panelPrincipal = new ImagePanel("/icons/Gimnasio.jpg");
+		panelPrincipal.setBackground(new Color(245, 245, 245));  // Solo sirve si la imagen no se carga
+
 		JLabel lblTitulo = new JLabel("Bienvenido al Sistema de Gestión del Gimnasio", SwingConstants.CENTER);
-		lblTitulo.setFont(new Font("Tahoma", Font.BOLD, 28));
-		lblTitulo.setForeground(new Color(33, 102, 172));
-		panel.add(lblTitulo, BorderLayout.NORTH);
-		JLabel lblDesc = new JLabel("Seleccione una opción del menú para comenzar", SwingConstants.CENTER);
-		lblDesc.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		panel.add(lblDesc, BorderLayout.CENTER);
-		return panel;
+		lblTitulo.setBackground(Color.DARK_GRAY);
+		lblTitulo.setOpaque(true);
+		lblTitulo.setFont(new Font("Verdana", Font.BOLD, 28));
+		lblTitulo.setForeground(Color.WHITE);
+		panelPrincipal.add(lblTitulo, BorderLayout.NORTH);
+
+		JLabel lblDesc = new JLabel("Seleccione una opción para comenzar", SwingConstants.CENTER);
+		lblDesc.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		lblDesc.setForeground(Color.WHITE);
+		lblDesc.setHorizontalTextPosition(SwingConstants.CENTER);
+		lblDesc.setVerticalAlignment(SwingConstants.BOTTOM);
+		lblDesc.setFont(new Font("Verdana", Font.PLAIN, 18));
+		panelPrincipal.add(lblDesc, BorderLayout.CENTER);
+
+		return panelPrincipal;
 	}
+
 
 	private void mostrarPanel(String nombre) {
-		cardLayout.show(centralPanel, nombre);
+		cl_centralPanel.show(centralPanel, nombre);
 	}
 
-	//METODS
-	public void aceptar() {
-		//GUARDAR TODOS LOS CAMBIOS REALIZADOS EN EL PROGRAMA
-	}
-
-	//CERRAR VENTANA
-	public void cerrar_ventana() {
-		System.exit(0);
+	// CERRAR VENTANA con confirmación y guardado de datos
+	private void cerrarVentana() {
+		int opcion = JOptionPane.showConfirmDialog(
+				frmSistemaDeGestion,
+				"¿Estás seguro de que quieres salir?",
+				"Confirmar salida",
+				JOptionPane.YES_NO_OPTION,
+				JOptionPane.QUESTION_MESSAGE
+		);
+		if (opcion == JOptionPane.YES_OPTION) {
+			frmSistemaDeGestion.dispose(); // Cerrar la ventana
+		}
 	}
 
 	private void iniciarReloj() {
 		Thread hiloReloj = new Thread(() -> {
 			while (true) {
 				java.time.LocalDateTime ahora = java.time.LocalDateTime.now();
-				java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+				java.time.format.DateTimeFormatter formatter =
+						java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
 				String texto = ahora.format(formatter);
 				javax.swing.SwingUtilities.invokeLater(() -> relojLabel.setText(texto));
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					break;
-				}
+				try { Thread.sleep(1000); }
+				catch (InterruptedException e) { break; }
 			}
 		});
 		hiloReloj.setDaemon(true);
