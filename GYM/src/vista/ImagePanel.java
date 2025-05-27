@@ -10,7 +10,6 @@ public class ImagePanel extends JPanel {
 	private Image background;
 
 	/**
-	 * @param resourcePath ruta en classpath, p.e. "/images/dashboard_bg.jpg"
 	 */
 	public ImagePanel(String resourcePath) {
 		try {
