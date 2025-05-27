@@ -1,5 +1,6 @@
 package entidades;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -7,6 +8,7 @@ import java.util.ArrayList;
 // HEREDA DE LA CLASE "Persona" Y CONTIENE INFORMACIÓN ADICIONAL COMO PLAN DE MEMBRESÍA, IMC Y MEDIDAS.
 
 public class Cliente extends Persona implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	private int idCliente;
@@ -94,44 +96,65 @@ public class Cliente extends Persona implements Serializable {
 
 	// --- Medidas individuales ---
 
-	public float getPeso() {
-		return medidas.size() > 0 ? medidas.get(0) : 0f;
+	public float getPeso()
+	{
+		return !medidas.isEmpty() ? medidas.getFirst() : 0f;
 	}
 
-	public void setPeso(float peso) {
-		if (medidas.size() > 0) {
+	public void setPeso(float peso)
+	{
+		if (!medidas.isEmpty())
+		{
 			medidas.set(0, peso);
-		} else {
+		}
+		else
+		{
 			// rellenar hasta el índice 0
-			while (medidas.size() < 1) medidas.add(0f);
+			while (medidas.isEmpty())
+				medidas.add(0f);
+
 			medidas.set(0, peso);
 		}
 		calculaIMC();
 	}
 
-	public float getAltura() {
+	public float getAltura()
+	{
 		return medidas.size() > 1 ? medidas.get(1) : 0f;
 	}
 
-	public void setAltura(float altura) {
-		if (medidas.size() > 1) {
+	public void setAltura(float altura)
+	{
+		if (medidas.size() > 1)
+		{
 			medidas.set(1, altura);
-		} else {
-			while (medidas.size() < 1) medidas.add(0f);
+		}
+		else
+		{
+			while (medidas.isEmpty())
+				medidas.add(0f);
+
 			medidas.add(altura);
 		}
 		calculaIMC();
 	}
 
-	public int getEdad() {
+	public int getEdad()
+	{
 		return medidas.size() > 2 ? Math.round(medidas.get(2)) : 0;
 	}
 
-	public void setEdad(int edad) {
-		if (medidas.size() > 2) {
+	public void setEdad(int edad)
+	{
+		if (medidas.size() > 2)
+		{
 			medidas.set(2, (float) edad);
-		} else {
-			while (medidas.size() < 2) medidas.add(0f);
+		}
+		else
+		{
+			while (medidas.size() < 2)
+				medidas.add(0f);
+
 			medidas.add((float) edad);
 		}
 	}
@@ -141,9 +164,6 @@ public class Cliente extends Persona implements Serializable {
 		return medidas;
 	}
 
-	/**
-	 * (Opcional) Para compatibilidad con usuarios existentes
-	 */
 	public int getIdCliente() {
 		return idCliente;
 	}
