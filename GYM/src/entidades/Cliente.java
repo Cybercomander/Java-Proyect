@@ -10,7 +10,7 @@ public class Cliente extends Persona implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private int idCliente;
-	private String planMembresia;
+	private String planMembresia;	// Bien
 	private float imc;
 	private ArrayList<Float> medidas;  // [peso, altura, edad]
 	private Clase suClase;             // Clase asignada
