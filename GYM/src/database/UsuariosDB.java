@@ -5,15 +5,28 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.io.Serializable;
 
+/**
+ * CLASE QUE GESTIONA EL ACCESO Y ALMACENAMIENTO DE USUARIOS EN EL SISTEMA
+ * UTILIZA ARCHIVOS DE ACCESO ALEATORIO PARA GUARDAR USUARIOS Y CONTRASENAS
+ */
 public class UsuariosDB implements Serializable
 {
+	/** NOMBRE DEL ARCHIVO DONDE SE GUARDAN LOS USUARIOS */
 	private static final String ARCHIVO_USUARIOS = "Usuarios.dat";
-	private static final int SIZE_USUARIO = 20; // caracteres
-	private static final int SIZE_PASSWORD = 20; // caracteres
-	private static final int SIZE_REGISTRO = SIZE_USUARIO * 2 + SIZE_PASSWORD * 2; // 2 bytes por char
+	/** TAMANO MAXIMO DEL NOMBRE DE USUARIO EN CARACTERES */
+	private static final int SIZE_USUARIO = 20; // CARACTERES
+	/** TAMANO MAXIMO DE LA CONTRASENA EN CARACTERES */
+	private static final int SIZE_PASSWORD = 20; // CARACTERES
+	/** TAMANO TOTAL DE UN REGISTRO DE USUARIO EN BYTES */
+	private static final int SIZE_REGISTRO = SIZE_USUARIO * 2 + SIZE_PASSWORD * 2; // 2 BYTES POR CHAR
 
+	/** INSTANCIA UNICA DE USUARIOSDB (PATRON SINGLETON) */
 	private static UsuariosDB instancia;
 
+	/**
+	 * OBTIENE LA INSTANCIA UNICA DE USUARIOSDB (SINGLETON)
+	 * @return INSTANCIA DE USUARIOSDB
+	 */
 	public static UsuariosDB getInstancia()
 	{
 		if (instancia == null)
@@ -22,11 +35,21 @@ public class UsuariosDB implements Serializable
 		return instancia;
 	}
 
+	/**
+	 * CONSTRUCTOR PRIVADO PARA IMPEDIR LA CREACION DE MULTIPLES INSTANCIAS
+	 */
 	private UsuariosDB() {}
 
+	/**
+	 * AGREGA UN NUEVO USUARIO AL ARCHIVO DE USUARIOS
+	 * @param usuario NOMBRE DE USUARIO
+	 * @param password CONTRASENA DEL USUARIO
+	 * @return TRUE SI SE AGREGO CORRECTAMENTE, FALSE EN CASO CONTRARIO
+	 * @throws IOException SI OCURRE UN ERROR DE ESCRITURA
+	 */
 	public boolean agregarUsuario(String usuario, String password) throws IOException
 	{
-		// Validaciones de usuario y contraseña
+		// VALIDACIONES DE USUARIO Y CONTRASENA
 		if (usuario == null || usuario.trim().isEmpty() || usuario.contains(" "))
 			return false;
 
@@ -55,6 +78,13 @@ public class UsuariosDB implements Serializable
 		return true;
 	}
 
+	/**
+	 * VALIDA SI UN USUARIO Y CONTRASENA EXISTEN EN EL ARCHIVO
+	 * @param usuario NOMBRE DE USUARIO
+	 * @param password CONTRASENA
+	 * @return TRUE SI EL USUARIO Y CONTRASENA SON CORRECTOS, FALSE EN CASO CONTRARIO
+	 * @throws IOException SI OCURRE UN ERROR DE LECTURA
+	 */
 	public boolean validarUsuario(String usuario, String password) throws IOException
 	{
 		if (usuario == null || usuario.trim().isEmpty() || password == null)
@@ -80,6 +110,12 @@ public class UsuariosDB implements Serializable
 		return false;
 	}
 
+	/**
+	 * VERIFICA SI UN USUARIO YA EXISTE EN EL ARCHIVO
+	 * @param usuario NOMBRE DE USUARIO A BUSCAR
+	 * @return TRUE SI EL USUARIO EXISTE, FALSE EN CASO CONTRARIO
+	 * @throws IOException SI OCURRE UN ERROR DE LECTURA
+	 */
 	public boolean existeUsuario(String usuario) throws IOException
 	{
 		if (usuario == null || usuario.trim().isEmpty())
@@ -108,6 +144,9 @@ public class UsuariosDB implements Serializable
 		return false;
 	}
 
+	/**
+	 * MUESTRA TODOS LOS USUARIOS REGISTRADOS EN CONSOLA
+	 */
 	public void mostrarUsuariosEnConsola()
 	{
 		try (RandomAccessFile archivo = new RandomAccessFile(ARCHIVO_USUARIOS, "r"))
@@ -127,6 +166,13 @@ public class UsuariosDB implements Serializable
 		}
 	}
 
+	/**
+	 * ESCRIBE UNA CADENA DE LONGITUD FIJA EN EL ARCHIVO, RELLENANDO CON ESPACIOS SI ES NECESARIO
+	 * @param archivo ARCHIVO DE ACCESO ALEATORIO
+	 * @param string CADENA A ESCRIBIR
+	 * @param size TAMANO FIJO DE LA CADENA
+	 * @throws IOException SI OCURRE UN ERROR DE ESCRITURA
+	 */
 	private void escribirCadenaFija(RandomAccessFile archivo, String string, int size) throws IOException
 	{
 		StringBuilder stringBuilder = new StringBuilder(string);
@@ -134,6 +180,13 @@ public class UsuariosDB implements Serializable
 		archivo.writeChars(stringBuilder.toString());
 	}
 
+	/**
+	 * LEE UNA CADENA DE LONGITUD FIJA DESDE EL ARCHIVO
+	 * @param archivo ARCHIVO DE ACCESO ALEATORIO
+	 * @param size TAMANO FIJO DE LA CADENA
+	 * @return CADENA LEIDA DEL ARCHIVO
+	 * @throws IOException SI OCURRE UN ERROR DE LECTURA
+	 */
 	private String leerCadenaFija(RandomAccessFile archivo, int size) throws IOException
 	{
 		char[] chars = new char[size];

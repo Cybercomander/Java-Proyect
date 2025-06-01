@@ -6,6 +6,7 @@ import java.awt.*;
 import java.io.Serial;
 import java.util.ArrayList;
 import java.io.RandomAccessFile;
+import database.GestionDatos;
 
 // CLASE "USUARIOS" QUE REPRESENTA LA INTERFAZ GRÁFICA PARA GESTIONAR LOS USUARIOS DEL SISTEMA.
 // PERMITE AGREGAR, EDITAR, ELIMINAR Y BUSCAR USUARIOS.
@@ -88,6 +89,8 @@ public class Usuarios extends JPanel
 		btnEliminar.addActionListener(event -> eliminarUsuario());
 		table.getSelectionModel().addListSelectionListener(event -> mostrarDetalles());
 
+		GestionDatos.getInstancia().addListener(this::cargarUsuarios);
+
 		cargarUsuarios();
 	}
 
@@ -115,12 +118,15 @@ public class Usuarios extends JPanel
 		}
 	}
 
-	// MÉTODO "buscarUsuarios":
-	// FILTRA LOS USUARIOS POR NOMBRE SEGÚN EL TEXTO INGRESADO EN "searchField".
+	// METODO "buscarUsuarios":
+	// FILTRA LOS USUARIOS POR NOMBRE SEGUN EL TEXTO INGRESADO EN "searchField".
 	private void buscarUsuarios()
 	{
+		// OBTIENE EL TEXTO INGRESADO EN EL CAMPO DE BUSQUEDA Y LO CONVIERTE A MINUSCULAS
 		String texto = searchField.getText().trim().toLowerCase();
+		// LIMPIA LA TABLA ANTES DE AGREGAR LOS RESULTADOS FILTRADOS
 		tableModel.setRowCount(0);
+		// RECORRE LA LISTA DE USUARIOS Y AGREGA SOLO LOS QUE COINCIDEN CON EL FILTRO
 		for (UsuarioSimple user : usuarios)
 		{
 			if (user.usuario.toLowerCase().contains(texto))
@@ -130,22 +136,24 @@ public class Usuarios extends JPanel
 		}
 	}
 
-	// MÉTODO "mostrarDetalles":
+	// METODO "mostrarDetalles":
 	// MUESTRA LOS DETALLES DEL USUARIO SELECCIONADO EN LA TABLA EN "detallesArea".
 	private void mostrarDetalles()
 	{
+		// OBTIENE LA FILA SELECCIONADA EN LA TABLA
 		int fila = table.getSelectedRow();
-		
+		// SI NO HAY FILA SELECCIONADA, LIMPIA EL AREA DE DETALLES Y SALE
 		if (fila == -1)
 		{
 			detallesArea.setText("");
 			return;
 		}
-		
+		// OBTIENE EL USUARIO Y CONTRASENA DE LA FILA SELECCIONADA
 		String usuario = (String) tableModel.getValueAt(fila, 0);
 		String contra = (String) tableModel.getValueAt(fila, 1);
+		// CONSTRUYE EL TEXTO DE DETALLES Y LO MUESTRA EN EL AREA
 		String string = "Usuario: " + usuario +
-				    "\nContraseña: " + contra;
+				"\nContraseña: " + contra;
 		detallesArea.setText(string);
 	}
 

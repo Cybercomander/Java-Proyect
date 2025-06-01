@@ -10,17 +10,33 @@ import entidades.Entrenador;
 import database.GestionDatos;
 import entidades.Clase;
 
+/**
+ * CLASE PERSONAL QUE REPRESENTA LA INTERFAZ GRAFICA PARA GESTIONAR EL PERSONAL DEL GIMNASIO
+ * HEREDA DE JPANEL Y UTILIZA COMPONENTES SWING PARA MOSTRAR Y MANIPULAR DATOS DE ENTRENADORES
+ */
 public class Personal extends JPanel
 {
+	/** IDENTIFICADOR DE VERSION PARA SERIALIZACION */
 	@Serial
 	private static final long serialVersionUID = 1L;
+	/** TABLA QUE MUESTRA EL PERSONAL EN UNA INTERFAZ GRAFICA */
 	private JTable table;
+	/** MODELO DE DATOS PARA LA TABLA, PERMITE MANIPULAR LOS DATOS MOSTRADOS */
 	private DefaultTableModel tableModel;
+	/** AREA DE TEXTO QUE MUESTRA LOS DETALLES DEL PERSONAL SELECCIONADO */
 	private JTextArea detallesArea;
+	/** PANEL QUE CONTIENE EL FORMULARIO PARA AGREGAR O EDITAR PERSONAL */
 	private JPanel panelFormulario;
+	/** PANEL PRINCIPAL QUE CONTIENE LA TABLA Y EL FORMULARIO */
 	private JPanel panelCentral;
+	/** BANDERA QUE INDICA SI SE ESTA EDITANDO UN PERSONAL */
 	private boolean editando = false;
 
+	/**
+	 * CONSTRUCTOR DE LA CLASE PERSONAL
+	 * CONFIGURA LA INTERFAZ GRAFICA, INCLUYENDO LA TABLA, BOTONES Y FORMULARIOS
+	 * TAMBIEN CARGA EL PERSONAL DESDE LA BASE DE DATOS AL INICIAR
+	 */
 	public Personal()
 	{
 		setLayout(new BorderLayout(10, 10));
@@ -75,10 +91,16 @@ public class Personal extends JPanel
 		rightPanel.add(detallesScroll, BorderLayout.CENTER);
 		add(rightPanel, BorderLayout.EAST);
 
+		GestionDatos.getInstancia().addListener(this::cargarPersonal);
 		cargarPersonal();
 		table.getSelectionModel().addListSelectionListener(e -> mostrarDetalles());
 	}
 
+	/**
+	 * METODO cargarPersonal
+	 * CARGA EL PERSONAL DESDE LA BASE DE DATOS Y LOS MUESTRA EN LA TABLA
+	 * LIMPIA EL MODELO DE LA TABLA ANTES DE AGREGAR LOS NUEVOS DATOS
+	 */
 	private void cargarPersonal()
 	{
 		tableModel.setRowCount(0);
@@ -94,6 +116,11 @@ public class Personal extends JPanel
 		// Aquí podrías agregar más tipos de personal si existieran
 	}
 
+	/**
+	 * METODO mostrarDetalles
+	 * MUESTRA LOS DETALLES DEL PERSONAL SELECCIONADO EN LA TABLA EN detallesArea
+	 * SI NO HAY NINGUN PERSONAL SELECCIONADO, LIMPIA EL AREA DE DETALLES
+	 */
 	private void mostrarDetalles()
 	{
 		int row = table.getSelectedRow();
@@ -120,6 +147,12 @@ public class Personal extends JPanel
 		}
 	}
 
+	/**
+	 * METODO buscarEntrenadorPorId
+	 * BUSCA UN ENTRENADOR POR SU ID EN LA LISTA DE ENTRENADORES CARGADA DESDE LA BASE DE DATOS
+	 * @param id ID DEL ENTRENADOR A BUSCAR
+	 * @return ENTRENADOR ENCONTRADO O NULL SI NO EXISTE
+	 */
 	private Entrenador buscarEntrenadorPorId(int id)
 	{
 		ArrayList<Entrenador> entrenadores = GestionDatos.getInstancia().getEntrenadores();
@@ -133,6 +166,10 @@ public class Personal extends JPanel
 		return null;
 	}
 
+	/**
+	 * METODO agregarPersonal
+	 * MUESTRA UN DIALOGO PARA AGREGAR UN NUEVO ENTRENADOR Y LO AGREGA A LA LISTA
+	 */
 	private void agregarPersonal()
 	{
 		JTextField idField = new JTextField();
@@ -177,6 +214,10 @@ public class Personal extends JPanel
 		}
 	}
 
+	/**
+	 * METODO editarPersonal
+	 * MUESTRA UN DIALOGO PARA EDITAR LOS DATOS DEL ENTRENADOR SELECCIONADO
+	 */
 	private void editarPersonal()
 	{
 		int row = table.getSelectedRow();
@@ -219,6 +260,11 @@ public class Personal extends JPanel
 		}
 	}
 
+	/**
+	 * METODO mostrarFormularioAgregar
+	 * MUESTRA EL FORMULARIO PARA AGREGAR UN NUEVO PERSONAL
+	 * SI YA SE ESTA EDITANDO, NO PERMITE ABRIR OTRO FORMULARIO
+	 */
 	private void mostrarFormularioAgregar()
 	{
 		if (editando)
@@ -234,6 +280,11 @@ public class Personal extends JPanel
 		panelCentral.revalidate(); panelCentral.repaint();
 	}
 
+	/**
+	 * METODO mostrarFormularioEditar
+	 * MUESTRA EL FORMULARIO PARA EDITAR EL PERSONAL SELECCIONADO EN LA TABLA
+	 * SI NO HAY NINGUN PERSONAL SELECCIONADO O YA SE ESTA EDITANDO, NO HACE NADA
+	 */
 	private void mostrarFormularioEditar()
 	{
 		int row = table.getSelectedRow();
@@ -261,8 +312,16 @@ public class Personal extends JPanel
 		panelCentral.revalidate(); panelCentral.repaint();
 	}
 
-private JPanel crearPanelFormulario(Entrenador entrenador)
-{
+	/**
+	 * METODO crearPanelFormulario
+	 * CREA Y CONFIGURA EL FORMULARIO PARA AGREGAR O EDITAR PERSONAL
+	 * INCLUYE CAMPOS PARA ID, NOMBRE, FECHA DE NACIMIENTO, SALARIO POR HORA, HORAS Y CLASE
+	 * TAMBIEN INCLUYE BOTONES PARA GUARDAR O CANCELAR LOS CAMBIOS
+	 * @param entrenador ENTRENADOR A EDITAR O NULL PARA AGREGAR NUEVO
+	 * @return PANEL CON EL FORMULARIO
+	 */
+	private JPanel crearPanelFormulario(Entrenador entrenador)
+	{
 	JPanel panel = new JPanel(new GridLayout(0,2,5,5));
 	panel.setBorder(BorderFactory.createTitledBorder(entrenador == null ? "Agregar Personal" : "Editar Personal"));
 	JTextField idField = new JTextField(entrenador == null ? "" : String.valueOf(entrenador.getNumEmpleado()));
@@ -395,6 +454,10 @@ private JPanel crearPanelFormulario(Entrenador entrenador)
 	return panel;
 }
 
+	/**
+	 * METODO ocultarFormulario
+	 * OCULTA EL FORMULARIO DE AGREGAR O EDITAR PERSONAL Y RESTABLECE EL ESTADO DE EDICION
+	 */
 	private void ocultarFormulario()
 	{
 		if (panelFormulario != null)
@@ -407,6 +470,11 @@ private JPanel crearPanelFormulario(Entrenador entrenador)
 		}
 	}
 
+	/**
+	 * METODO eliminarPersonal
+	 * ELIMINA EL PERSONAL SELECCIONADO EN LA TABLA DESPUES DE CONFIRMAR LA ACCION
+	 * TAMBIEN ACTUALIZA LA BASE DE DATOS Y REFRESCA LA TABLA
+	 */
 	private void eliminarPersonal()
 	{
 		int row = table.getSelectedRow();
