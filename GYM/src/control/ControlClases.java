@@ -10,23 +10,29 @@ import entidades.Clase;
 import entidades.Entrenador;
 import database.GestionDatos;
 
-// CLASE "CONTROLCLASES" QUE GESTIONA LAS OPERACIONES RELACIONADAS CON LAS CLASES DEL GIMNASIO.
-// UTILIZA LA CLASE "GestionDatos" PARA ACCEDER Y MODIFICAR LOS DATOS PERSISTENTES.
+/**
+ * CLASE CONTROLCLASES QUE GESTIONA LAS OPERACIONES RELACIONADAS CON LAS CLASES DEL GIMNASIO.
+ * UTILIZA LA CLASE GESTIONDATOS PARA ACCEDER Y MODIFICAR LOS DATOS PERSISTENTES.
+ */
 public class ControlClases
 {
-	// Todas las operaciones usan GestionDatos
+	/**
+	 * INSTANCIA ESTATICA DE GESTIONDATOS PARA ACCESO A DATOS PERSISTENTES.
+	 */
 	private static GestionDatos datos = GestionDatos.getInstancia();
 	
-	// MÉTODO "inicializa":
-	// INICIALIZA LOS DATOS DEL SISTEMA DESDE UN ARCHIVO O GENERA DATOS DE PRUEBA SI NO EXISTEN.
+	/**
+	 * INICIALIZA LOS DATOS DEL SISTEMA DESDE UN ARCHIVO O GENERA DATOS DE PRUEBA SI NO EXISTEN.
+	 */
 	public static void inicializa()
 	{
 		datos.inicializarDatos();
 	}
 	
-	// MÉTODO "addClase":
-	// AGREGA UNA NUEVA CLASE AL SISTEMA SI NO EXISTE UNA CON EL MISMO NÚMERO.
-	// GUARDA LOS CAMBIOS EN LOS DATOS PERSISTENTES.
+	/**
+	 * AGREGA UNA NUEVA CLASE AL SISTEMA SI NO EXISTE UNA CON EL MISMO NUMERO DE ID.
+	 * @param c OBJETO CLASE A AGREGAR
+	 */
 	public static void addClase(Clase c)
 	{
 		ArrayList<Clase> clases = datos.getClases();
@@ -42,8 +48,11 @@ public class ControlClases
 		guardar();
 	}
 
-	// MÉTODO "buscaCliente":
-	// BUSCA Y RETORNA UN CLIENTE POR SU ID. SI NO SE ENCUENTRA, RETORNA NULL.
+	/**
+	 * BUSCA Y RETORNA UN CLIENTE POR SU ID. SI NO SE ENCUENTRA, RETORNA NULL.
+	 * @param idCliente ID DEL CLIENTE A BUSCAR
+	 * @return OBJETO CLIENTE SI SE ENCUENTRA, NULL EN CASO CONTRARIO
+	 */
 	public static Cliente buscaCliente(int idCliente)
 	{
 		return datos.getClientes()
@@ -53,8 +62,11 @@ public class ControlClases
 			.orElse(null);
 	}
 
-	// MÉTODO "buscaEntrenador":
-	// BUSCA Y RETORNA UN ENTRENADOR POR SU NÚMERO DE EMPLEADO. SI NO SE ENCUENTRA, RETORNA NULL.
+	/**
+	 * BUSCA Y RETORNA UN ENTRENADOR POR SU NUMERO DE EMPLEADO. SI NO SE ENCUENTRA, RETORNA NULL.
+	 * @param numEmpleado NUMERO DE EMPLEADO DEL ENTRENADOR
+	 * @return OBJETO ENTRENADOR SI SE ENCUENTRA, NULL EN CASO CONTRARIO
+	 */
 	public static Entrenador buscaEntrenador(int numEmpleado)
 	{
 		return datos.getEntrenadores()
@@ -64,8 +76,11 @@ public class ControlClases
 			.orElse(null);
 	}
 
-	// MÉTODO "buscaClase":
-	// BUSCA Y RETORNA UNA CLASE POR SU NÚMERO. SI NO SE ENCUENTRA, RETORNA NULL.
+	/**
+	 * BUSCA Y RETORNA UNA CLASE POR SU NUMERO DE ID. SI NO SE ENCUENTRA, RETORNA NULL.
+	 * @param numClase NUMERO DE ID DE LA CLASE
+	 * @return OBJETO CLASE SI SE ENCUENTRA, NULL EN CASO CONTRARIO
+	 */
 	public static Clase buscaClase(int numClase)
 	{
 		return datos.getClases()
@@ -75,9 +90,11 @@ public class ControlClases
 			.orElse(null);
 	}
 
-	// MÉTODO "eliminarClase":
-	// ELIMINA UNA CLASE DEL SISTEMA POR SU NÚMERO Y GUARDA LOS CAMBIOS EN LOS DATOS PERSISTENTES.
-	// RETORNA TRUE SI LA CLASE FUE ELIMINADA, FALSE EN CASO CONTRARIO.
+	/**
+	 * ELIMINA UNA CLASE DEL SISTEMA POR SU NUMERO DE ID Y GUARDA LOS CAMBIOS EN LOS DATOS PERSISTENTES.
+	 * @param numClase NUMERO DE ID DE LA CLASE A ELIMINAR
+	 * @return TRUE SI LA CLASE FUE ELIMINADA, FALSE EN CASO CONTRARIO
+	 */
 	public static boolean eliminarClase(int numClase)
 	{
 		ArrayList<Clase> clases = datos.getClases();
@@ -87,8 +104,9 @@ public class ControlClases
 		return removed;
 	}
 
-	// MÉTODO "tablaPlanesMembresia":
-	// GENERA UNA TABLA DE FRECUENCIA DE CLIENTES POR PLAN DE MEMBRESÍA Y LA MUESTRA EN UN DIÁLOGO.
+	/**
+	 * GENERA UNA TABLA DE FRECUENCIA DE CLIENTES POR PLAN DE MEMBRESIA Y LA MUESTRA EN UN DIALOGO.
+	 */
 	public static void tablaPlanesMembresia()
 	{
 		ArrayList<Clase> clases = datos.getClases();
@@ -125,8 +143,9 @@ public class ControlClases
 		JOptionPane.showMessageDialog(null, mensaje.toString());
 	}
 
-	// MÉTODO "guardar":
-	// GUARDA LOS DATOS DEL SISTEMA EN UN ARCHIVO PARA MANTENER LA PERSISTENCIA.
+	/**
+	 * GUARDA LOS DATOS DEL SISTEMA EN UN ARCHIVO PARA MANTENER LA PERSISTENCIA.
+	 */
 	public static void guardar()
 	{
 		try
@@ -139,15 +158,19 @@ public class ControlClases
 		}
 	}
 
-	// MÉTODO "getClases":
-	// RETORNA LA LISTA DE CLASES REGISTRADAS EN EL SISTEMA.
+	/**
+	 * RETORNA LA LISTA DE CLASES REGISTRADAS EN EL SISTEMA.
+	 * @return LISTA DE OBJETOS CLASE
+	 */
 	public static ArrayList<Clase> getClases()
 	{
 		return datos.getClases();
 	}
 
-	// MÉTODO "getCantidad":
-	// RETORNA LA CANTIDAD TOTAL DE CLASES REGISTRADAS.
+	/**
+	 * RETORNA LA CANTIDAD TOTAL DE CLASES REGISTRADAS.
+	 * @return NUMERO ENTERO DE CLASES
+	 */
 	public static int getCantidad()
 	{
 		return datos.getClases().size();

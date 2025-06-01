@@ -6,19 +6,43 @@ import entidades.Entrenador;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
+/**
+ * CLASE QUE GESTIONA LOS DATOS PRINCIPALES DEL SISTEMA DE GIMNASIO
+ * INCLUYE FUNCIONALIDAD PARA SERIALIZAR Y NOTIFICAR CAMBIOS A LOS OBSERVADORES
+ */
 public class GestionDatos implements Serializable {
+	/** IDENTIFICADOR DE VERSION PARA LA SERIALIZACION */
 	@Serial
 	private static final long serialVersionUID = 1L;
+	/** NOMBRE DEL ARCHIVO DONDE SE GUARDAN LOS DATOS SERIALIZADOS */
 	private static final String ARCHIVO_DATOS = "Datos.dat";
 
+	/** LISTA DE CLASES DEL GIMNASIO */
 	private ArrayList<Clase> clases;
+	/** INSTANCIA UNICA DE GESTIONDATOS (PATRON SINGLETON) */
 	private static GestionDatos instancia;
 
+	/**
+	 * LISTA DE OBSERVADORES PARA NOTIFICAR CAMBIOS EN LOS DATOS
+	 * ES TRANSIENTE PARA NO SERIALIZAR LOS OBSERVADORES
+	 */
+	private transient List<Runnable> listeners = new CopyOnWriteArrayList<>();
+
+	/**
+	 * CONSTRUCTOR PRIVADO PARA IMPEDIR LA CREACION DE MULTIPLES INSTANCIAS
+	 * INICIALIZA LA LISTA DE CLASES
+	 */
 	private GestionDatos() {
 		clases = new ArrayList<>();
 	}
 
+	/**
+	 * OBTIENE LA INSTANCIA UNICA DE GESTIONDATOS (SINGLETON)
+	 * @return INSTANCIA DE GESTIONDATOS
+	 */
 	public static GestionDatos getInstancia() {
 		if (instancia == null) {
 			instancia = new GestionDatos();
@@ -27,8 +51,37 @@ public class GestionDatos implements Serializable {
 	}
 
 	/**
-	 * Inicializa: si existe el fichero con datos, los carga;
-	 * si no, genera datos de prueba y los guarda.
+	 * AGREGA UN OBSERVADOR PARA SER NOTIFICADO CUANDO HAYA CAMBIOS EN LOS DATOS
+	 * @param listener OBJETO QUE IMPLEMENTA RUNNABLE PARA SER NOTIFICADO
+	 */
+	public void addListener(Runnable listener) {
+		if (listeners == null) listeners = new CopyOnWriteArrayList<>();
+		listeners.add(listener);
+	}
+
+	/**
+	 * ELIMINA UN OBSERVADOR DE LA LISTA DE NOTIFICACIONES
+	 * @param listener OBSERVADOR A ELIMINAR
+	 */
+	public void removeListener(Runnable listener) {
+		if (listeners != null) listeners.remove(listener);
+	}
+
+	/**
+	 * NOTIFICA A TODOS LOS OBSERVADORES REGISTRADOS SOBRE UN CAMBIO EN LOS DATOS
+	 */
+	private void notifyListeners() {
+		if (listeners != null) {
+			for (Runnable r : listeners) {
+				try { r.run(); } catch (Exception ignored) {}
+			}
+		}
+	}
+
+	/**
+	 * INICIALIZA LOS DATOS DEL SISTEMA:
+	 * SI EXISTE EL ARCHIVO DE DATOS, LOS CARGA;
+	 * SI NO, GENERA DATOS DE PRUEBA Y LOS GUARDA
 	 */
 	@SuppressWarnings("unchecked")
 	public void inicializarDatos()
@@ -69,7 +122,10 @@ public class GestionDatos implements Serializable {
 		}
 	}
 
-	/** Serializa el ArrayList<Clase> en el fichero Datos.dat */
+	/**
+	 * GUARDA LA LISTA DE CLASES EN EL ARCHIVO DE DATOS USANDO SERIALIZACION
+	 * @throws IOException SI OCURRE UN ERROR AL ESCRIBIR EL ARCHIVO
+	 */
 	public void guardarDatos() throws IOException
 	{
 		try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(ARCHIVO_DATOS)))
@@ -77,9 +133,12 @@ public class GestionDatos implements Serializable {
 			oos.writeObject(clases);
 			System.out.println("Datos guardados correctamente.");
 		}
+		notifyListeners(); // NOTIFICAR A LOS PANELES
 	}
 
-	/** Población inicial de prueba (idéntica a tu versión original) */
+	/**
+	 * GENERA UNA POBLACION INICIAL DE DATOS DE PRUEBA PARA EL SISTEMA
+	 */
 	public void generarDatosPrueba()
 	{
 		clases.clear();
@@ -112,7 +171,7 @@ public class GestionDatos implements Serializable {
 		cliente.setClase(c1);
 		c1.addCliente(cliente);
 
-		cliente = new Cliente("Pepe", 20002, "Básico", "23-08-1990");
+		cliente = new Cliente("Pepe", 20002, "Basico", "23-08-1990");
 		cliente.asignaMedidas(75, 1.68f, 18);
 		cliente.setClase(c1);
 		c1.addCliente(cliente);
@@ -127,7 +186,7 @@ public class GestionDatos implements Serializable {
 		cliente.setClase(c2);
 		c2.addCliente(cliente);
 
-		cliente = new Cliente("Manuel", 20005, "Básico", "12-02-1985");
+		cliente = new Cliente("Manuel", 20005, "Basico", "12-02-1985");
 		cliente.asignaMedidas(95, 1.85f, 25);
 		cliente.setClase(c3);
 		c3.addCliente(cliente);
@@ -142,7 +201,7 @@ public class GestionDatos implements Serializable {
 		cliente.setClase(c3);
 		c3.addCliente(cliente);
 
-		cliente = new Cliente("Alex", 20008, "Básico", "19-01-1998");
+		cliente = new Cliente("Alex", 20008, "Basico", "19-01-1998");
 		cliente.asignaMedidas(82, 1.76f, 19);
 		cliente.setClase(c4);
 		c4.addCliente(cliente);
@@ -158,12 +217,18 @@ public class GestionDatos implements Serializable {
 		c4.addCliente(cliente);
 	}
 
-	/** Devuelve la lista de todas las clases */
+	/**
+	 * DEVUELVE LA LISTA DE TODAS LAS CLASES DEL GIMNASIO
+	 * @return LISTA DE CLASES
+	 */
 	public ArrayList<Clase> getClases() {
 		return clases;
 	}
 
-	/** Devuelve la lista de todos los clientes */
+	/**
+	 * DEVUELVE LA LISTA DE TODOS LOS CLIENTES DEL GIMNASIO
+	 * @return LISTA DE CLIENTES
+	 */
 	public ArrayList<Cliente> getClientes() {
 		ArrayList<Cliente> clientes = new ArrayList<>();
 		for (Clase c : clases) {
@@ -172,7 +237,10 @@ public class GestionDatos implements Serializable {
 		return clientes;
 	}
 
-	/** Devuelve la lista de todos los entrenadores */
+	/**
+	 * DEVUELVE LA LISTA DE TODOS LOS ENTRENADORES DEL GIMNASIO
+	 * @return LISTA DE ENTRENADORES
+	 */
 	public ArrayList<Entrenador> getEntrenadores() {
 		ArrayList<Entrenador> entrenadores = new ArrayList<>();
 		for (Clase c : clases) {
@@ -183,16 +251,27 @@ public class GestionDatos implements Serializable {
 		return entrenadores;
 	}
 
-	/** Agrega una nueva clase y persiste inmediatamente */
+	/**
+	 * AGREGA UNA NUEVA CLASE AL SISTEMA Y GUARDA LOS DATOS INMEDIATAMENTE
+	 * @param clase CLASE A AGREGAR
+	 * @throws IOException SI OCURRE UN ERROR AL GUARDAR LOS DATOS
+	 */
 	public void agregarClase(Clase clase) throws IOException {
 		clases.add(clase);
 		guardarDatos();
 	}
 
-	/** Agrega un entrenador a su clase y persiste */
+	/**
+	 * AGREGA UN ENTRENADOR A SU CLASE CORRESPONDIENTE Y GUARDA LOS DATOS
+	 * @param entrenador ENTRENADOR A AGREGAR
+	 * @throws IOException SI OCURRE UN ERROR AL GUARDAR LOS DATOS
+	 */
 	public void agregarEntrenador(Entrenador entrenador) throws IOException {
 		for (Clase c : clases) {
 			if (c.getClaseID() == entrenador.getClase().getClaseID()) {
+				if (c.getEntrenador() != null) {
+					throw new IllegalStateException("Ya existe un entrenador asignado a esta clase.");
+				}
 				c.setEntrenador(entrenador);
 				entrenador.setClase(c);
 				break;
@@ -201,7 +280,11 @@ public class GestionDatos implements Serializable {
 		guardarDatos();
 	}
 
-	/** Agrega un cliente a su clase y persiste */
+	/**
+	 * AGREGA UN CLIENTE A SU CLASE CORRESPONDIENTE Y GUARDA LOS DATOS
+	 * @param cliente CLIENTE A AGREGAR
+	 * @throws IOException SI OCURRE UN ERROR AL GUARDAR LOS DATOS
+	 */
 	public void agregarCliente(Cliente cliente) throws IOException {
 		for (Clase c : clases) {
 			if (c.getClaseID() == cliente.getClase().getClaseID()) {

@@ -9,35 +9,37 @@ import java.io.Serial;
 import java.util.ArrayList;
 import java.awt.Dimension;
 
-// CLASE "ENTRENADORES" QUE REPRESENTA LA INTERFAZ GRÁFICA PARA GESTIONAR ENTRENADORES EN EL SISTEMA.
-// ESTA CLASE HEREDA DE "JPanel" Y UTILIZA COMPONENTES SWING PARA MOSTRAR Y MANIPULAR DATOS DE ENTRENADORES.
-
+/**
+ * CLASE ENTRENADORES QUE REPRESENTA LA INTERFAZ GRAFICA PARA GESTIONAR ENTRENADORES EN EL SISTEMA PRINCIPAL
+ * HEREDA DE JPANEL Y UTILIZA COMPONENTES SWING PARA MOSTRAR Y MANIPULAR DATOS DE ENTRENADORES
+ */
 public class Entrenadores extends JPanel
 {
 	@Serial
 	private static final long serialVersionUID = 1L;
 
-	// ATRIBUTOS PRIVADOS DE LA CLASE:
+	/** TABLA QUE MUESTRA LOS ENTRENADORES EN UNA INTERFAZ GRAFICA */
+	private JTable table;
+	/** MODELO DE DATOS PARA LA TABLA, PERMITE MANIPULAR LOS DATOS MOSTRADOS */
+	private DefaultTableModel tableModel;
+	/** BOTONES PARA EDITAR Y ELIMINAR ENTRENADORES */
+	private JButton btnEditar, btnEliminar;
+	/** CAMPO DE TEXTO PARA BUSCAR ENTRENADORES POR NOMBRE */
+	private JTextField searchField;
+	/** AREA DE TEXTO QUE MUESTRA LOS DETALLES DEL ENTRENADOR SELECCIONADO */
+	private JTextArea detallesArea;
+	/** PANEL QUE CONTIENE EL FORMULARIO PARA AGREGAR O EDITAR ENTRENADORES */
+	private JPanel panelFormulario;
+	/** PANEL PRINCIPAL QUE CONTIENE LA TABLA Y EL FORMULARIO */
+	private JPanel panelCentral;
+	/** BANDERA QUE INDICA SI SE ESTA EDITANDO UN ENTRENADOR */
+	private boolean editando = false;
 
-	private JTable table;	// TABLA QUE MUESTRA LOS ENTRENADORES EN UNA INTERFAZ GRÁFICA.
-
-	private DefaultTableModel tableModel;	// MODELO DE DATOS PARA LA TABLA, PERMITE MANIPULAR LOS DATOS MOSTRADOS.
-
-	private JButton btnEditar, btnEliminar;	// BOTONES PARA EDITAR Y ELIMINAR ENTRENADORES.
-
-	private JTextField searchField;	// CAMPO DE TEXTO PARA BUSCAR ENTRENADORES POR NOMBRE.
-
-	private JTextArea detallesArea;	// ÁREA DE TEXTO QUE MUESTRA LOS DETALLES DEL ENTRENADOR SELECCIONADO.
-
-	private JPanel panelFormulario;	// PANEL QUE CONTIENE EL FORMULARIO PARA AGREGAR O EDITAR ENTRENADORES.
-
-	private JPanel panelCentral;	// PANEL PRINCIPAL QUE CONTIENE LA TABLA Y EL FORMULARIO.
-
-	private boolean editando = false;	// BANDERA QUE INDICA SI SE ESTÁ EDITANDO UN ENTRENADOR.
-
-	// CONSTRUCTOR DE LA CLASE "ENTRENADORES":
-	// CONFIGURA LA INTERFAZ GRÁFICA, INCLUYENDO LA TABLA, BOTONES Y FORMULARIOS.
-	// TAMBIÉN CARGA LOS ENTRENADORES DESDE LA BASE DE DATOS AL INICIAR.
+	/**
+	 * CONSTRUCTOR DE LA CLASE ENTRENADORES
+	 * CONFIGURA LA INTERFAZ GRAFICA, INCLUYENDO LA TABLA, BOTONES Y FORMULARIOS
+	 * TAMBIEN CARGA LOS ENTRENADORES DESDE LA BASE DE DATOS AL INICIAR
+	 */
 	public Entrenadores()
 	{
 		setLayout(new BorderLayout(10, 10));
@@ -105,6 +107,8 @@ public class Entrenadores extends JPanel
 		rightPanel.add(detallesScroll, BorderLayout.CENTER);
 		add(rightPanel, BorderLayout.EAST);
 
+		GestionDatos.getInstancia().addListener(this::cargarEntrenadores);
+
 		cargarEntrenadores();
 		btnAgregar.addActionListener(e -> mostrarFormularioAgregar());
 		btnEditar.addActionListener(e -> mostrarFormularioEditar());
@@ -112,9 +116,11 @@ public class Entrenadores extends JPanel
 		table.getSelectionModel().addListSelectionListener(e -> mostrarDetalles());
 	}
 
-	// MÉTODO "cargarEntrenadores":
-	// CARGA LOS ENTRENADORES DESDE LA BASE DE DATOS Y LOS MUESTRA EN LA TABLA.
-	// LIMPIA EL MODELO DE LA TABLA ANTES DE AGREGAR LOS NUEVOS DATOS.
+	/**
+	 * METODO cargarEntrenadores
+	 * CARGA LOS ENTRENADORES DESDE LA BASE DE DATOS Y LOS MUESTRA EN LA TABLA
+	 * LIMPIA EL MODELO DE LA TABLA ANTES DE AGREGAR LOS NUEVOS DATOS
+	 */
 	private void cargarEntrenadores()
 	{
 		tableModel.setRowCount(0); // Limpiar la tabla
@@ -137,9 +143,11 @@ public class Entrenadores extends JPanel
 		System.out.println("Total entrenadores cargados: " + entrenadores.size());
 	}
 
-	// MÉTODO "buscarEntrenadores":
-	// FILTRA LOS ENTRENADORES POR NOMBRE SEGÚN EL TEXTO INGRESADO EN "searchField".
-	// ACTUALIZA LA TABLA CON LOS RESULTADOS DE LA BÚSQUEDA.
+	/**
+	 * METODO buscarEntrenadores
+	 * FILTRA LOS ENTRENADORES POR NOMBRE SEGUN EL TEXTO INGRESADO EN searchField
+	 * ACTUALIZA LA TABLA CON LOS RESULTADOS DE LA BUSQUEDA
+	 */
 	private void buscarEntrenadores()
 	{
 		String texto = searchField.getText().trim().toLowerCase();
@@ -160,9 +168,11 @@ public class Entrenadores extends JPanel
 		}
 	}
 
-	// MÉTODO "mostrarDetalles":
-	// MUESTRA LOS DETALLES DEL ENTRENADOR SELECCIONADO EN LA TABLA EN "detallesArea".
-	// SI NO HAY NINGÚN ENTRENADOR SELECCIONADO, LIMPIA EL ÁREA DE DETALLES.
+	/**
+	 * METODO mostrarDetalles
+	 * MUESTRA LOS DETALLES DEL ENTRENADOR SELECCIONADO EN LA TABLA EN detallesArea
+	 * SI NO HAY NINGUN ENTRENADOR SELECCIONADO, LIMPIA EL AREA DE DETALLES
+	 */
 	private void mostrarDetalles()
 	{
 		int row = table.getSelectedRow();
@@ -186,9 +196,11 @@ public class Entrenadores extends JPanel
 		}
 	}
 
-	// MÉTODO "mostrarFormularioAgregar":
-	// MUESTRA EL FORMULARIO PARA AGREGAR UN NUEVO ENTRENADOR.
-	// SI YA SE ESTÁ EDITANDO, NO PERMITE ABRIR OTRO FORMULARIO.
+	/**
+	 * METODO mostrarFormularioAgregar
+	 * MUESTRA EL FORMULARIO PARA AGREGAR UN NUEVO ENTRENADOR
+	 * SI YA SE ESTA EDITANDO, NO PERMITE ABRIR OTRO FORMULARIO
+	 */
 	private void mostrarFormularioAgregar()
 	{
 		if (editando)
@@ -205,9 +217,11 @@ public class Entrenadores extends JPanel
 		panelCentral.repaint();
 	}
 
-	// MÉTODO "mostrarFormularioEditar":
-	// MUESTRA EL FORMULARIO PARA EDITAR EL ENTRENADOR SELECCIONADO EN LA TABLA.
-	// SI NO HAY NINGÚN ENTRENADOR SELECCIONADO O YA SE ESTÁ EDITANDO, NO HACE NADA.
+	/**
+	 * METODO mostrarFormularioEditar
+	 * MUESTRA EL FORMULARIO PARA EDITAR EL ENTRENADOR SELECCIONADO EN LA TABLA
+	 * SI NO HAY NINGUN ENTRENADOR SELECCIONADO O YA SE ESTA EDITANDO, NO HACE NADA
+	 */
 	private void mostrarFormularioEditar()
 	{
 		int row = table.getSelectedRow();
@@ -236,10 +250,14 @@ public class Entrenadores extends JPanel
 		panelCentral.repaint();
 	}
 
-	// MÉTODO "crearPanelFormulario":
-	// CREA Y CONFIGURA EL FORMULARIO PARA AGREGAR O EDITAR ENTRENADORES.
-	// INCLUYE CAMPOS PARA ID, NOMBRE, FECHA DE NACIMIENTO, SALARIO POR HORA Y HORAS.
-	// TAMBIÉN INCLUYE BOTONES PARA GUARDAR O CANCELAR LOS CAMBIOS.
+	/**
+	 * METODO crearPanelFormulario
+	 * CREA Y CONFIGURA EL FORMULARIO PARA AGREGAR O EDITAR ENTRENADORES
+	 * INCLUYE CAMPOS PARA ID, NOMBRE, FECHA DE NACIMIENTO, SALARIO POR HORA Y HORAS
+	 * TAMBIEN INCLUYE BOTONES PARA GUARDAR O CANCELAR LOS CAMBIOS
+	 * @param entrenador ENTRENADOR A EDITAR O NULL PARA AGREGAR NUEVO
+	 * @return PANEL CON EL FORMULARIO
+	 */
 	private JPanel crearPanelFormulario(Entrenador entrenador)
 	{
 		JPanel panel = new JPanel(new GridLayout(0,2,5,5));
@@ -375,6 +393,12 @@ public class Entrenadores extends JPanel
 						return;
 					}
 
+					// Validar que la clase no tenga ya un entrenador
+					if (clase != null && clase.getEntrenador() != null) {
+						JOptionPane.showMessageDialog(this, "Ya existe un entrenador asignado a esta clase.");
+						return;
+					}
+
 					Entrenador nuevo = new Entrenador(nombre, fecha, id, salarioHora, horas);
 					nuevo.setClase(clase);
 
@@ -386,6 +410,11 @@ public class Entrenadores extends JPanel
 				}
 				else
 				{
+					// Validar que la clase no tenga ya un entrenador diferente
+					if (clase != null && clase.getEntrenador() != null && clase.getEntrenador() != entrenador) {
+						JOptionPane.showMessageDialog(this, "Ya existe un entrenador asignado a esta clase.");
+						return;
+					}
 					entrenador.setNombre(nombre);
 					entrenador.setFechaNacimiento(fecha);
 					entrenador.setSalarioHora(salarioHora);
@@ -408,8 +437,10 @@ public class Entrenadores extends JPanel
 		return panel;
 	}
 
-	// MÉTODO "ocultarFormulario":
-	// OCULTA EL FORMULARIO DE AGREGAR O EDITAR ENTRENADORES Y RESTABLECE EL ESTADO DE EDICIÓN.
+	/**
+	 * METODO ocultarFormulario
+	 * OCULTA EL FORMULARIO DE AGREGAR O EDITAR ENTRENADORES Y RESTABLECE EL ESTADO DE EDICION
+	 */
 	private void ocultarFormulario()
 	{
 		if (panelFormulario != null)
@@ -422,9 +453,11 @@ public class Entrenadores extends JPanel
 		}
 	}
 
-	// MÉTODO "eliminarEntrenador":
-	// ELIMINA EL ENTRENADOR SELECCIONADO EN LA TABLA DESPUÉS DE CONFIRMAR LA ACCIÓN.
-	// TAMBIÉN ACTUALIZA LA BASE DE DATOS Y REFRESCA LA TABLA.
+	/**
+	 * METODO eliminarEntrenador
+	 * ELIMINA EL ENTRENADOR SELECCIONADO EN LA TABLA DESPUES DE CONFIRMAR LA ACCION
+	 * TAMBIEN ACTUALIZA LA BASE DE DATOS Y REFRESCA LA TABLA
+	 */
 	private void eliminarEntrenador()
 	{
 		int row = table.getSelectedRow();
@@ -458,8 +491,12 @@ public class Entrenadores extends JPanel
 		}
 	}
 
-	// MÉTODO "buscarEntrenadorPorId":
-	// BUSCA UN ENTRENADOR POR SU ID EN LA LISTA DE ENTRENADORES CARGADA DESDE LA BASE DE DATOS.
+	/**
+	 * METODO buscarEntrenadorPorId
+	 * BUSCA UN ENTRENADOR POR SU ID EN LA LISTA DE ENTRENADORES CARGADA DESDE LA BASE DE DATOS
+	 * @param id ID DEL ENTRENADOR A BUSCAR
+	 * @return ENTRENADOR ENCONTRADO O NULL SI NO EXISTE
+	 */
 	private Entrenador buscarEntrenadorPorId(int id)
 	{
 		ArrayList<Entrenador> entrenadores = GestionDatos.getInstancia().getEntrenadores();
@@ -473,8 +510,12 @@ public class Entrenadores extends JPanel
 		return null;
 	}
 
-	// MÉTODO "eliminarEntrenadorPorId":
-	// ELIMINA LA RELACIÓN DEL ENTRENADOR CON SU CLASE Y LO ELIMINA DE LA BASE DE DATOS.
+	/**
+	 * METODO eliminarEntrenadorPorId
+	 * ELIMINA LA RELACION DEL ENTRENADOR CON SU CLASE Y LO ELIMINA DE LA BASE DE DATOS
+	 * @param id ID DEL ENTRENADOR A ELIMINAR
+	 * @return TRUE SI SE ELIMINO, FALSE EN CASO CONTRARIO
+	 */
 	private boolean eliminarEntrenadorPorId(int id)
 	{
 		ArrayList<entidades.Clase> clases = GestionDatos.getInstancia().getClases();

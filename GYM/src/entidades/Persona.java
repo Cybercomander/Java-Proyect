@@ -2,28 +2,67 @@ package entidades;
 
 import java.io.Serializable;
 
+/**
+ * CLASE QUE REPRESENTA UNA PERSONA GENERICA DEL SISTEMA
+ * IMPLEMENTA SERIALIZABLE PARA PERMITIR SU SERIALIZACION
+ */
 public class Persona implements Serializable
 {
-	// ATRIBUTOS
+	// ATRIBUTOS PRINCIPALES DE UNA PERSONA
 	private String nombre;
 	private String fechaNacimiento;
 
-	//CONSTRUCTORES
+	/**
+	 * CONSTRUCTOR POR DEFECTO
+	 * INICIALIZA UNA PERSONA SIN NOMBRE NI FECHA DE NACIMIENTO
+	 */
 	public Persona() {}
 	
+	/**
+	 * CONSTRUCTOR QUE INICIALIZA UNA PERSONA CON NOMBRE Y FECHA DE NACIMIENTO
+	 * @param nombre NOMBRE DE LA PERSONA
+	 * @param fechaNacimiento FECHA DE NACIMIENTO DE LA PERSONA
+	 */
 	public Persona(String nombre, String fechaNacimiento)
 	{
+		// ASIGNA EL NOMBRE Y LA FECHA DE NACIMIENTO A LOS ATRIBUTOS
 		this.nombre = nombre;
 		this.fechaNacimiento = fechaNacimiento;
 	}
 	
-	// GET
-	public String getNombre() { return nombre; }
+	/**
+	 * OBTIENE EL NOMBRE DE LA PERSONA
+	 * @return NOMBRE DE LA PERSONA
+	 */
+	public String getNombre() {
+		// RETORNA EL NOMBRE ALMACENADO
+		return nombre;
+	}
 	
-	public String getFechaNacimiento() { return fechaNacimiento; }
+	/**
+	 * OBTIENE LA FECHA DE NACIMIENTO DE LA PERSONA
+	 * @return FECHA DE NACIMIENTO
+	 */
+	public String getFechaNacimiento() {
+		// RETORNA LA FECHA DE NACIMIENTO ALMACENADA
+		return fechaNacimiento;
+	}
 	
-	//SETTER
-	public void setNombre(String nombre) { this.nombre = nombre; }
+	/**
+	 * ESTABLECE EL NOMBRE DE LA PERSONA
+	 * @param nombre NUEVO NOMBRE
+	 */
+	public void setNombre(String nombre) {
+		// ASIGNA EL NUEVO NOMBRE AL ATRIBUTO
+		this.nombre = nombre;
+	}
 	
-	public void setFechaNacimiento(String fechaNacimiento) { this.fechaNacimiento = fechaNacimiento; }
+	/**
+	 * ESTABLECE LA FECHA DE NACIMIENTO DE LA PERSONA
+	 * @param fechaNacimiento NUEVA FECHA DE NACIMIENTO
+	 */
+	public void setFechaNacimiento(String fechaNacimiento) {
+		// ASIGNA LA NUEVA FECHA DE NACIMIENTO AL ATRIBUTO
+		this.fechaNacimiento = fechaNacimiento;
+	}
 }

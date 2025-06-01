@@ -64,12 +64,20 @@ public class Login
 	 */
 	private void initialize()
 	{  // CONFIGURA TODOS LOS COMPONENTES DE LA VENTANA, INCLUYENDO CAMPOS DE TEXTO Y BOTONES.
-		frame = new JFrame();
-		frame.setBounds(100, 100, 1080, 581);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    frame = new JFrame();
+    frame.setBounds(100, 100, 1080, 581);
+    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		// PANEL SUR - BOTONES DE ACCIÓN
-		JPanel southPanel = new JPanel();
+    // ESTABLECER EL ICONO DE LA APLICACION
+    try {
+        java.awt.Image icon = new javax.swing.ImageIcon(getClass().getResource("/icons/GYMico.png")).getImage();
+        frame.setIconImage(icon);
+    } catch (Exception e) {
+        System.out.println("No se pudo cargar el icono de la aplicación.");
+    }
+
+    // PANEL SUR - BOTONES DE ACCIÓN
+    JPanel southPanel = new JPanel();
 		FlowLayout flowLayout = (FlowLayout) southPanel.getLayout();
 		flowLayout.setAlignment(FlowLayout.RIGHT);
 		frame.getContentPane().add(southPanel, BorderLayout.SOUTH);
