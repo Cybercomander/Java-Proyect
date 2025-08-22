@@ -37,7 +37,7 @@ public class Login
 				Login ventana = new Login();
 				ventana.frame.setVisible(true);
 				ventana.frame.setLocationRelativeTo(null);
-				ventana.frame.setResizable(false);
+				ventana.frame.setResizable(true);
 			}
 			catch (Exception e)
 			{
